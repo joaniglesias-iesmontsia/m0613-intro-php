@@ -1,5 +1,4 @@
 <?php
-
 // ==========================================
 // Basic PHP Example: Variables & Operations
 // ==========================================
@@ -15,23 +14,33 @@ $target = "world!";
 // ------------------------------------------
 // Integer Operations: Sum, Multiply, Divide
 // ------------------------------------------
-
-// Sum (+)
 $sum = $num1 + $num2;
-echo "Sum: $num1 + $num2 = " . $sum . PHP_EOL;
-
-// Multiply (*)
 $product = $num1 * $num2;
-echo "Multiplication: $num1 * $num2 = " . $product . PHP_EOL;
-
-// Divide (/)
 $division = $num1 / $num2;
-echo "Division: $num1 / $num2 = " . $division . PHP_EOL;
 
 // ------------------------------------------
 // String Operations: Concatenation
 // ------------------------------------------
-
-// In PHP, the dot operator (.) is used to concatenate strings
 $fullMessage = $greeting . " " . $target;
-echo "Concatenation: " . $fullMessage . PHP_EOL;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic PHP Example</title>
+</head>
+<body>
+    <h1>PHP Basics: Variables &amp; Operations</h1>
+    
+    <h2>Integer Operations</h2>
+    <p>Sum: <?php echo "$num1 + $num2 = $sum"; ?></p>
+    <p>Multiplication: <?php echo "$num1 * $num2 = $product"; ?></p>
+    <p>Division: <?php echo "$num1 / $num2 = $division"; ?></p>
+
+    <h2>String Operations</h2>
+    <p>Concatenation: <?php echo $fullMessage; ?></p>
+
+    <h2>Current date and time:</h2>
+    <p>The current date and time is: <?php echo date("d/m/Y H:i:s"); ?></p>
+</body>
+</html>
