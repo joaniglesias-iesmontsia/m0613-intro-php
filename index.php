@@ -1,6 +1,7 @@
 <?php
 // ==========================================
 // Basic PHP Example: Variables & Operations
+// Approach: "HTML inside PHP"
 // ==========================================
 
 // 1. Define two integer variables
@@ -22,25 +23,31 @@ $division = $num1 / $num2;
 // String Operations: Concatenation
 // ------------------------------------------
 $fullMessage = $greeting . " " . $target;
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Basic PHP Example</title>
-</head>
-<body>
-    <h1>PHP Basics: Variables &amp; Operations</h1>
-    
-    <h2>Integer Operations</h2>
-    <p>Sum: <?php echo "$num1 + $num2 = $sum"; ?></p>
-    <p>Multiplication: <?php echo "$num1 * $num2 = $product"; ?></p>
-    <p>Division: <?php echo "$num1 / $num2 = $division"; ?></p>
 
-    <h2>String Operations</h2>
-    <p>Concatenation: <?php echo $fullMessage; ?></p>
+// Current date and time
+$currentDateTime = date("d/m/Y H:i:s");
 
-    <h2>Current date and time:</h2>
-    <p>The current date and time is: <?php echo date("d/m/Y H:i:s"); ?></p>
-</body>
-</html>
+// ------------------------------------------
+// Generate HTML completely from within PHP
+// ------------------------------------------
+echo "<!DOCTYPE html>\n";
+echo "<html lang=\"en\">\n";
+echo "<head>\n";
+echo "    <meta charset=\"UTF-8\">\n";
+echo "    <title>Basic PHP Example</title>\n";
+echo "</head>\n";
+echo "<body>\n";
+echo "    <h1>PHP Basics: Variables &amp; Operations</h1>\n";
+echo "    \n";
+echo "    <h2>Integer Operations</h2>\n";
+echo "    <p>Sum: $num1 + $num2 = $sum</p>\n";
+echo "    <p>Multiplication: $num1 * $num2 = $product</p>\n";
+echo "    <p>Division: $num1 / $num2 = $division</p>\n";
+echo "    \n";
+echo "    <h2>String Operations</h2>\n";
+echo "    <p>Concatenation: $fullMessage</p>\n";
+echo "    \n";
+echo "    <h2>Current date and time:</h2>\n";
+echo "    <p>The current date and time is: $currentDateTime</p>\n";
+echo "</body>\n";
+echo "</html>\n";
