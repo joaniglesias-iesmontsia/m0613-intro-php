@@ -1,53 +1,70 @@
 <?php
-// ==========================================
-// Basic PHP Example: Variables & Operations
-// Approach: "HTML inside PHP"
-// ==========================================
+// Start or resume session
+session_start();
 
-// 1. Define two integer variables
-$num1 = 10;
-$num2 = 5;
+var_dump($_SESSION);
+echo "<br>";
+var_dump($_POST);
+echo "<br>";
+var_dump($_GET);
+echo "<br>";
 
-// 2. Define two string variables
-$greeting = "Hello";
-$target = "world!";
+// Initialize the students list in session if it doesn't exist
+if (!isset($_SESSION['students'])) {
+    $_SESSION['students'] = [];
+}
 
-// ------------------------------------------
-// Integer Operations: Sum, Multiply, Divide
-// ------------------------------------------
-$sum = $num1 + $num2;
-$product = $num1 * $num2;
-$division = $num1 / $num2;
+// Add student directly to session without any validation
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $_SESSION['students'][] = [
+        'name' => $_POST['name'],
+        'age'  => $_POST['age']
+    ];
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management</title>
+</head>
+<body>
+    <h1>Student Management System</h1>
 
-// ------------------------------------------
-// String Operations: Concatenation
-// ------------------------------------------
-$fullMessage = $greeting . " " . $target;
+    <!-- Form to Add a New Student -->
+    <h2>Add New Student</h2>
+    <form method="POST" action="index.php">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <br><br>
 
-// Current date and time
-$currentDateTime = date("d/m/Y H:i:s");
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age">
+        <br><br>
 
-// ------------------------------------------
-// Generate HTML completely from within PHP
-// ------------------------------------------
-echo "<!DOCTYPE html>\n";
-echo "<html lang=\"en\">\n";
-echo "<head>\n";
-echo "    <meta charset=\"UTF-8\">\n";
-echo "    <title>Basic PHP Example</title>\n";
-echo "</head>\n";
-echo "<body>\n";
-echo "    <h1>PHP Basics: Variables &amp; Operations</h1>\n";
-echo "    \n";
-echo "    <h2>Integer Operations</h2>\n";
-echo "    <p>Sum: $num1 + $num2 = $sum</p>\n";
-echo "    <p>Multiplication: $num1 * $num2 = $product</p>\n";
-echo "    <p>Division: $num1 / $num2 = $division</p>\n";
-echo "    \n";
-echo "    <h2>String Operations</h2>\n";
-echo "    <p>Concatenation: $fullMessage</p>\n";
-echo "    \n";
-echo "    <h2>Current date and time:</h2>\n";
-echo "    <p>The current date and time is: $currentDateTime</p>\n";
-echo "</body>\n";
-echo "</html>\n";
+        <button type="submit">Add Student</button>
+    </form>
+
+    <hr>
+
+    <!-- Display List of Students -->
+    <h2>Registered Students</h2>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($_SESSION['students'] as $student): ?>
+                <tr>
+                    <td><?php echo $student['name']; ?></td>
+                    <td><?php echo $student['age']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</body>
+</html>
