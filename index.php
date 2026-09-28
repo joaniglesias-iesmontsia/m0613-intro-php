@@ -1,18 +1,18 @@
 <?php
 // ==============================================================================
-// CRUD Example with SQLite & PDO (Single-page / Spaghetti style)
+// Simple OOP (POO) CRUD with SQLite & PDO
 // ==============================================================================
 
-// 1. Connect to SQLite database (creates 'students.db' file automatically)
+// 1. Connect to SQLite database
 $db = new PDO('sqlite:' . __DIR__ . '/students.db');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// 2. Create the table if it does not already exist
-$db->exec("CREATE TABLE IF NOT EXISTS students (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    age INTEGER NOT NULL
-)");
+// 2. Import the Student class
+require_once __DIR__ . '/Student.php';
+
+
+// 3. Instantiate the Student object
+$studentModel = new Student($db);
 
 // ------------------------------------------
 // CREATE or UPDATE
@@ -23,20 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $age = $_POST['age'] ?? '';
 
     if ($id !== "") {
-        // UPDATE existing student
-        $stmt = $db->prepare("UPDATE students SET name = :name, age = :age WHERE id = :id");
-        $stmt->execute([
-            ':name' => $name,
-            ':age'  => $age,
-            ':id'   => $id
-        ]);
+        $studentModel->update($id, $name, $age);
     } else {
-        // CREATE new student
-        $stmt = $db->prepare("INSERT INTO students (name, age) VALUES (:name, :age)");
-        $stmt->execute([
-            ':name' => $name,
-            ':age'  => $age
-        ]);
+        $studentModel->create($name, $age);
     }
 }
 
@@ -44,9 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 // DELETE
 // ------------------------------------------
 if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $stmt = $db->prepare("DELETE FROM students WHERE id = :id");
-    $stmt->execute([':id' => $id]);
+    $studentModel->delete($_GET['delete']);
 }
 
 // ------------------------------------------
@@ -57,31 +44,27 @@ $edit_name = "";
 $edit_age = "";
 
 if (isset($_GET['edit'])) {
-    $edit_id = $_GET['edit'];
-    $stmt = $db->prepare("SELECT * FROM students WHERE id = :id");
-    $stmt->execute([':id' => $edit_id]);
-    $studentToEdit = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    $studentToEdit = $studentModel->find($_GET['edit']);
     if ($studentToEdit) {
+        $edit_id = $studentToEdit['id'];
         $edit_name = $studentToEdit['name'];
         $edit_age = $studentToEdit['age'];
     }
 }
 
 // ------------------------------------------
-// READ (Fetch all students from SQLite)
+// READ (Fetch all students)
 // ------------------------------------------
-$stmt = $db->query("SELECT * FROM students");
-$students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$students = $studentModel->all();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Management (SQLite)</title>
+    <title>Student Management (OOP + SQLite)</title>
 </head>
 <body>
-    <h1>Student Management System (SQLite)</h1>
+    <h1>Student Management System (OOP + SQLite)</h1>
 
     <!-- Form to Add or Update a Student -->
     <h2><?php echo $edit_id !== "" ? "Update Student" : "Add New Student"; ?></h2>
