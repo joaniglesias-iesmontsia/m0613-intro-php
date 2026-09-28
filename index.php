@@ -2,24 +2,82 @@
 // Start or resume session
 session_start();
 
-var_dump($_SESSION);
-echo "<br>";
-var_dump($_POST);
-echo "<br>";
-var_dump($_GET);
-echo "<br>";
+/*
+echo "<h3>\$_SESSION</h3>";
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
+echo "<h3>\$_POST</h3>";
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
+
+echo "<h3>\$_GET</h3>";
+echo "<pre>";
+print_r($_GET);
+echo "</pre>";
+
+echo "<h3>\$_COOKIE</h3>";
+echo "<pre>";
+print_r($_COOKIE);
+echo "</pre>";
+
+echo "<h3>\$_SERVER</h3>";
+echo "<pre>";
+print_r($_SERVER);
+echo "</pre>";
+*/
 
 // Initialize the students list in session if it doesn't exist
 if (!isset($_SESSION['students'])) {
     $_SESSION['students'] = [];
 }
 
-// Add student directly to session without any validation
+// ------------------------------------------
+// 1. CREATE or UPDATE
+// ------------------------------------------
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $_SESSION['students'][] = [
-        'name' => $_POST['name'],
-        'age'  => $_POST['age']
-    ];
+    $id = $_POST['id'] ?? '';
+
+    if ($id !== "") {
+        // UPDATE existing student
+        $_SESSION['students'][$id] = [
+            'name' => $_POST['name'],
+            'age'  => $_POST['age']
+        ];
+    } else {
+        // CREATE new student
+        $_SESSION['students'][] = [
+            'name' => $_POST['name'],
+            'age'  => $_POST['age']
+        ];
+    }
+}
+
+// ------------------------------------------
+// 2. DELETE
+// ------------------------------------------
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    unset($_SESSION['students'][$id]);
+    // Reset numeric keys so array indexes remain contiguous (0, 1, 2...)
+    $_SESSION['students'] = array_values($_SESSION['students']);
+}
+
+// ------------------------------------------
+// 3. EDIT (Load student data into the form)
+// ------------------------------------------
+$edit_id = "";
+$edit_name = "";
+$edit_age = "";
+
+if (isset($_GET['edit'])) {
+    $edit_id = $_GET['edit'];
+    if (isset($_SESSION['students'][$edit_id])) {
+        $edit_name = $_SESSION['students'][$edit_id]['name'];
+        $edit_age = $_SESSION['students'][$edit_id]['age'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -31,18 +89,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <h1>Student Management System</h1>
 
-    <!-- Form to Add a New Student -->
-    <h2>Add New Student</h2>
+    <!-- Form to Add or Update a Student -->
+    <h2><?php echo $edit_id !== "" ? "Update Student" : "Add New Student"; ?></h2>
     <form method="POST" action="index.php">
+        <!-- Hidden input to store student index when editing -->
+        <input type="hidden" name="id" value="<?php echo $edit_id; ?>">
+
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name">
+        <input type="text" id="name" name="name" value="<?php echo $edit_name; ?>">
         <br><br>
 
         <label for="age">Age:</label>
-        <input type="number" id="age" name="age">
+        <input type="number" id="age" name="age" value="<?php echo $edit_age; ?>">
         <br><br>
 
-        <button type="submit">Add Student</button>
+        <button type="submit"><?php echo $edit_id !== "" ? "Update Student" : "Add Student"; ?></button>
+        <?php if ($edit_id !== ""): ?>
+            <a href="index.php">Cancel</a>
+        <?php endif; ?>
     </form>
 
     <hr>
@@ -55,13 +119,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <tr>
                 <th>Name</th>
                 <th>Age</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($_SESSION['students'] as $student): ?>
+            <?php foreach ($_SESSION['students'] as $index => $student): ?>
                 <tr>
                     <td><?php echo $student['name']; ?></td>
                     <td><?php echo $student['age']; ?></td>
+                    <td>
+                        <a href="index.php?edit=<?php echo $index; ?>">Edit</a> | 
+                        <a href="index.php?delete=<?php echo $index; ?>">Delete</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
