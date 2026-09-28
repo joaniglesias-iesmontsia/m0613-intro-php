@@ -17,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         $studentModel->create($name, $age);
     }
-    // Refresh to clear form submission
     header("Location: students.php");
     exit;
 }
@@ -51,72 +50,58 @@ if (isset($_GET['edit'])) {
 // 4. READ (Fetch all students)
 // ------------------------------------------
 $students = $studentModel->all();
+
+$pageTitle = "Students Management";
+require_once __DIR__ . '/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Students Management</title>
-</head>
-<body>
-    <h1>School Management System</h1>
 
-    <!-- Navigation Menu -->
-    <nav>
-        <a href="students.php"><strong>[ Students ]</strong></a>
-        &nbsp;|&nbsp;
-        <a href="teachers.php"><strong>[ Teachers ]</strong></a>
-    </nav>
+<h2>Students Management</h2>
 
-    <hr>
+<!-- Form to Add or Update a Student -->
+<h3><?php echo $edit_id !== "" ? "Update Student" : "Add New Student"; ?></h3>
+<form method="POST" action="students.php">
+    <input type="hidden" name="id" value="<?php echo $edit_id; ?>">
 
-    <h2>Students Management</h2>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="<?php echo $edit_name; ?>">
+    <br><br>
 
-    <!-- Form to Add or Update a Student -->
-    <h3><?php echo $edit_id !== "" ? "Update Student" : "Add New Student"; ?></h3>
-    <form method="POST" action="students.php">
-        <input type="hidden" name="id" value="<?php echo $edit_id; ?>">
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" value="<?php echo $edit_age; ?>">
+    <br><br>
 
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="<?php echo $edit_name; ?>">
-        <br><br>
+    <button type="submit"><?php echo $edit_id !== "" ? "Update Student" : "Add Student"; ?></button>
+    <?php if ($edit_id !== ""): ?>
+        <a href="students.php">Cancel</a>
+    <?php endif; ?>
+</form>
 
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" value="<?php echo $edit_age; ?>">
-        <br><br>
+<hr>
 
-        <button type="submit"><?php echo $edit_id !== "" ? "Update Student" : "Add Student"; ?></button>
-        <?php if ($edit_id !== ""): ?>
-            <a href="students.php">Cancel</a>
-        <?php endif; ?>
-    </form>
-
-    <hr>
-
-    <!-- Display List of Students -->
-    <h3>Registered Students</h3>
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
+<!-- Display List of Students -->
+<h3>Registered Students</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($students as $student): ?>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Actions</th>
+                <td><?php echo $student['id']; ?></td>
+                <td><?php echo $student['name']; ?></td>
+                <td><?php echo $student['age']; ?></td>
+                <td>
+                    <a href="students.php?edit=<?php echo $student['id']; ?>">Edit</a> | 
+                    <a href="students.php?delete=<?php echo $student['id']; ?>">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($students as $student): ?>
-                <tr>
-                    <td><?php echo $student['id']; ?></td>
-                    <td><?php echo $student['name']; ?></td>
-                    <td><?php echo $student['age']; ?></td>
-                    <td>
-                        <a href="students.php?edit=<?php echo $student['id']; ?>">Edit</a> | 
-                        <a href="students.php?delete=<?php echo $student['id']; ?>">Delete</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</body>
-</html>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php require_once __DIR__ . '/footer.php'; ?>
