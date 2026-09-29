@@ -1,9 +1,12 @@
 <?php
-// Database connection configuration (SQLite)
-$db = new PDO('sqlite:' . __DIR__ . '/students.db');
+// ==============================================================================
+// Database Configuration (SQLite via PDO)
+// ==============================================================================
+
+$db = new PDO('sqlite:' . dirname(__DIR__) . '/students.db');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Database table definitions (moved outside the classes)
+// Initialize database tables if not existing
 $db->exec("CREATE TABLE IF NOT EXISTS students (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,

@@ -7,11 +7,11 @@
 <body>
     <h1>School Management System</h1>
 
-    <!-- Navigation Menu (DRY) -->
+    <!-- Navigation Menu (MVC links) -->
     <nav>
-        <a href="students.php"><strong>[ Students ]</strong></a>
+        <a href="index.php?controller=students&action=index"><strong>[ Students ]</strong></a>
         &nbsp;|&nbsp;
-        <a href="teachers.php"><strong>[ Teachers ]</strong></a>
+        <a href="index.php?controller=teachers&action=index"><strong>[ Teachers ]</strong></a>
     </nav>
 
     <hr>

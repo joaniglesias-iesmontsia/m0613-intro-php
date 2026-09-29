@@ -1,11 +1,15 @@
 <?php
+// ==============================================================================
+// Student Model
+// ==============================================================================
+
 require_once __DIR__ . '/Model.php';
 
 class Student extends Model {
-    protected $table = 'students';
+    protected string $table = 'students';
 
-    // Insert a new student
-    public function create($name, $age) {
+    // Create a new student
+    public function create(string $name, int $age): bool {
         $stmt = $this->db->prepare("INSERT INTO {$this->table} (name, age) VALUES (:name, :age)");
         return $stmt->execute([
             ':name' => $name,
@@ -14,7 +18,7 @@ class Student extends Model {
     }
 
     // Update an existing student
-    public function update($id, $name, $age) {
+    public function update(int $id, string $name, int $age): bool {
         $stmt = $this->db->prepare("UPDATE {$this->table} SET name = :name, age = :age WHERE id = :id");
         return $stmt->execute([
             ':name' => $name,
