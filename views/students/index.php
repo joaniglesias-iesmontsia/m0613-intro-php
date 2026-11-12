@@ -9,6 +9,10 @@
     <input type="text" id="name" name="name" value="<?php echo $edit_name; ?>" required>
     <br><br>
 
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname" name="surname" value="<?php echo $edit_surname; ?>" required>
+    <br><br>
+
     <label for="age">Age:</label>
     <input type="number" id="age" name="age" value="<?php echo $edit_age; ?>" required>
     <br><br>
@@ -28,6 +32,7 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Surname</th>
             <th>Age</th>
             <th>Actions</th>
         </tr>
@@ -37,6 +42,7 @@
             <tr>
                 <td><?php echo $student['id']; ?></td>
                 <td><?php echo $student['name']; ?></td>
+                <td><?php echo $student['surname']; ?></td>
                 <td><?php echo $student['age']; ?></td>
                 <td>
                     <a href="index.php?controller=students&action=edit&id=<?php echo $student['id']; ?>">Edit</a> | 

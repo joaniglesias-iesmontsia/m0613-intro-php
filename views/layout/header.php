@@ -12,6 +12,8 @@
         <a href="index.php?controller=students&action=index"><strong>[ Students ]</strong></a>
         &nbsp;|&nbsp;
         <a href="index.php?controller=teachers&action=index"><strong>[ Teachers ]</strong></a>
+        &nbsp;|&nbsp;
+        <a href="index.php?controller=projects&action=index"><strong>[ Projects ]</strong></a>
     </nav>
 
     <hr>

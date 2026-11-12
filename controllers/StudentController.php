@@ -16,6 +16,7 @@ class StudentController {
     public function index(): void {
         $edit_id   = "";
         $edit_name = "";
+        $edit_surname = "";
         $edit_age  = "";
 
         $students = $this->model->all();
@@ -31,6 +32,7 @@ class StudentController {
     public function edit(): void {
         $edit_id   = "";
         $edit_name = "";
+        $edit_surname = "";
         $edit_age  = "";
 
         if (isset($_GET['id'])) {
@@ -38,6 +40,7 @@ class StudentController {
             if ($student) {
                 $edit_id   = $student['id'];
                 $edit_name = $student['name'];
+                $edit_surname = $student['surname'];
                 $edit_age  = $student['age'];
             }
         }
@@ -56,12 +59,13 @@ class StudentController {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $id   = $_POST['id'] ?? '';
             $name = trim($_POST['name'] ?? '');
+            $surname = trim($_POST['surname'] ?? '');
             $age  = (int)($_POST['age'] ?? 0);
 
             if ($id !== "") {
-                $this->model->update((int)$id, $name, $age);
+                $this->model->update((int)$id, $name, $surname, $age);
             } else {
-                $this->model->create($name, $age);
+                $this->model->create($name, $surname, $age);
             }
         }
 
